@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete Patient</title>
+</head>
+<body>
+    <h1>Delete Patient</h1>
+    <p>Are you sure you want to delete the following patient?</p>
+    <ul>
+        <li>Name: {{ patient.name }}</li>
+        <li>Age: {{ patient.age }}</li>
+        <li>Height: {{ patient.height }}</li>
+        <li>Weight: {{ patient.weight }}</li>
+    </ul>
+    <form action="/delete_patient/{{ patient.id }}" method="post">
+        <button type="submit">Confirm Delete</button>
+    </form>
+    <br>
+    <a href="/dashboard">Cancel</a>
+</body>
+</html>

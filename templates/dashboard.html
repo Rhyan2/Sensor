@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doctor Dashboard</title>
+</head>
+<body>
+
+    {% if request.query_params.get('error') %}
+  <div class="error">{{ request.query_params.get('error') }}</div>
+{% elif request.query_params.get('message') %}
+  <div class="success">{{ request.query_params.get('message') }}</div>
+{% endif %}
+    <h1>Welcome to the Doctor Dashboard</h1>
+
+    <!-- Search Form at the top -->
+    <form action="/dashboard" method="get">
+        <input type="text" name="query" placeholder="Search by patient ID or name" value="{{ query if query else '' }}">
+        <button type="submit">Search</button>
+        {% if query %}
+            <a href="/dashboard"><button type="button">Clear Search</button></a>
+        {% endif %}
+    </form>
+
+    <h2>Patients List</h2>
+    <table border="1">
+        <tr>
+            <th>Patient ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Weight</th>
+            <th>Height</th>
+            <th>Actions</th>
+        </tr>
+        {% for patient in patients %}
+        <tr>
+            <td>{{ patient.id }}</td>
+            <td>{{ patient.name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.weight }}</td>
+            <td>{{ patient.height }}</td>
+            <td><a href="/patient/{{ patient.id }}">View</a></td>
+            <td><a href="/edit_patient/{{ patient.id }}">Edit</a></td>
+            <td><a href="/delete_patient/{{ patient.id }}">Delete</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <a href="/add-patient">Add New Patient</a>
+    <br>
+    <a href="/logout">Logout</a>
+</body>
+</html>

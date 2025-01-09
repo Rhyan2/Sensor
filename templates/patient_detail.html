@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient ECG Monitor</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 800px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        #ecg-graph {
+            width: 100%;
+            height: 400px;
+            margin: 20px 0;
+        }
+        .line {
+            fill: none;
+            stroke: steelblue;
+            stroke-width: 2px;
+        }
+        #bpm {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        .info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Patient ECG Monitor</h1>
+        <h2 id="patientInfo">Patient ID: <span id="patientId"></span></h2>
+        <div id="ecg-graph"></div>
+        <div class="info">
+            <p>Heart Rate: <span id="bpmValue" class="bpm">--</span> BPM</p>
+            <a href="/dashboard">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        const patientId = "{{patient.id}}"; // Replace with dynamic patient ID if needed
+        document.getElementById('patientId').textContent = patientId;
+
+        const svg = d3.select("#ecg-graph")
+            .append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr("viewBox", "0 0 800 400");
+
+        const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+        const width = 800 - margin.left - margin.right;
+        const height = 400 - margin.top - margin.bottom;
+
+        const yScale = d3.scaleLinear().domain([0, 3.3]).range([height, 0]);
+        const xScale = d3.scaleLinear().range([0, width]);
+
+        const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d => `${d.toFixed(1)}s`);
+        const yAxis = d3.axisLeft(yScale).ticks(5).tickFormat(d => `${d.toFixed(1)}V`);
+
+        const line = d3
+            .line()
+            .x(d => xScale(d.timestamp))
+            .y(d => yScale(d.ecg));
+
+        const graph = svg
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        graph
+            .append("g")
+            .attr("class", "x-axis")
+            .attr("transform", `translate(0,${height})`)
+            .call(xAxis);
+
+        graph.append("g").attr("class", "y-axis").call(yAxis);
+
+        graph
+            .append("text")
+            .attr("x", width / 2)
+            .attr("y", height + margin.bottom - 10)
+            .attr("text-anchor", "middle")
+            .attr("fill", "black")
+            .text("Time (seconds)");
+
+        graph
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -height / 2)
+            .attr("y", -margin.left + 15)
+            .attr("text-anchor", "middle")
+            .attr("fill", "black")
+            .text("Voltage (V)");
+
+        const path = graph
+            .append("path")
+            .attr("class", "line")
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 2);
+
+        let ecgData = [];
+
+        const ws = new WebSocket(`ws://${window.location.host}/ws/${patientId}`);
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            // console.log("Received data: ", data);
+
+            // Parse the timestamp correctly
+            const timestamp = parseFloat(data.timestamp.split('.')[1]) / 1000;
+            if (isNaN(timestamp)) {
+                console.error("Invalid timestamp:", data.timestamp);
+                return;
+            }
+
+            // Use the ECG value directly
+            const ecgValue = data.ecg;
+            if (ecgValue === undefined) {
+                console.error("Invalid ECG value:", data.ecg);
+                return;
+            }
+
+            ecgData.push({
+                timestamp: timestamp,
+                ecg: ecgValue
+            });
+
+            // Keep only the latest 1000 data points
+            if (ecgData.length > 1000) {
+                ecgData = ecgData.slice(-1000);
+            }
+
+            // Update the x-axis domain
+            const timeRange = [ecgData[0].timestamp, Math.max(ecgData[ecgData.length - 1].timestamp, ecgData[0].timestamp + 20)];
+            xScale.domain(timeRange);
+
+            // Update the graph with the new data
+            path.datum(ecgData).attr("d", line);
+
+            // Update BPM display
+            document.getElementById("bpmValue").innerText = data.bpm.toFixed(1);
+
+            // Update the x-axis
+            graph.select(".x-axis").call(xAxis);
+        };
+
+        ws.onopen = () => {
+            console.log("WebSocket connection established");
+        };
+        ws.onclose = () => {
+            console.log("WebSocket connection closed");
+        };
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+    </script>
+</body>
+</html>

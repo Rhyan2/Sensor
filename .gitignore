@@ -1,0 +1,20 @@
+# Ignore the virtual environment folder
+env/
+
+# Ignore environment variable files
+.env
+
+# Ignore common Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Ignore IDE/project-specific files
+.vscode/
+.idea/
+*.swp
