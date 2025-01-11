@@ -131,48 +131,43 @@
             .attr("stroke-width", 2);
 
         let ecgData = [];
+        const visibleTimeRange = 20; // Display 20 seconds of data at a time
+        let startTime = null;
 
         const ws = new WebSocket(`ws://${window.location.host}/ws/${patientId}`);
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            // console.log("Received data: ", data);
 
-            // Parse the timestamp correctly
-            const timestamp = parseFloat(data.timestamp.split('.')[1]) / 1000;
-            if (isNaN(timestamp)) {
-                console.error("Invalid timestamp:", data.timestamp);
-                return;
-            }
+            // Parse timestamp and initialize start time
+            const timestamp = parseFloat(data.timestamp.split('.')[0]) + parseFloat(data.timestamp.split('.')[1]) / 1000;
+            if (startTime === null) startTime = timestamp;
 
-            // Use the ECG value directly
-            const ecgValue = data.ecg;
-            if (ecgValue === undefined) {
-                console.error("Invalid ECG value:", data.ecg);
-                return;
-            }
+            // Normalize timestamp to start from 0
+            const normalizedTime = timestamp - startTime;
 
+            // Push new data point
             ecgData.push({
-                timestamp: timestamp,
-                ecg: ecgValue
+                timestamp: normalizedTime,
+                ecg: data.ecg
             });
 
-            // Keep only the latest 1000 data points
-            if (ecgData.length > 1000) {
-                ecgData = ecgData.slice(-1000);
-            }
+            // Remove old data points outside the visible range
+            ecgData = ecgData.filter(d => d.timestamp >= normalizedTime - visibleTimeRange);
 
-            // Update the x-axis domain
-            const timeRange = [ecgData[0].timestamp, Math.max(ecgData[ecgData.length - 1].timestamp, ecgData[0].timestamp + 20)];
-            xScale.domain(timeRange);
+            // Update X-axis domain
+            xScale.domain([
+                Math.max(0, normalizedTime - visibleTimeRange),
+                normalizedTime
+            ]);
 
-            // Update the graph with the new data
+            // Update graph with new data
             path.datum(ecgData).attr("d", line);
 
             // Update BPM display
             document.getElementById("bpmValue").innerText = data.bpm.toFixed(1);
 
-            // Update the x-axis
+            // Update X-axis
             graph.select(".x-axis").call(xAxis);
         };
 
