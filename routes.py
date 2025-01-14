@@ -401,26 +401,38 @@ async def delete_patient(
 ## Adding a forgot password link
 @router.get("/forgot-password", response_class=HTMLResponse)
 async def forgot_password_form(request: Request):
+    logger.debug("GET /forgot-password route accessed")
     return templates.TemplateResponse("forgot_password.html", {"request": request})
 
 @router.post("/forgot-password", response_class=HTMLResponse)
 async def forgot_password(request: Request, email: str = Form(...), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == email).first()
-    if not user:
-        return templates.TemplateResponse("forgot_password.html", {"request": request, "error": "Email not found."})
+    logger.info(f"POST /forgot-password route accessed for email: {email}")
+    
+    try:
+        user = db.query(User).filter(User.email == email).first()
+        if not user:
+            
+            return templates.TemplateResponse("forgot_password.html", {"request": request, "error": "Email not found."})
+        # Generate a reset token
+        reset_token = str(uuid.uuid4())
+        temporary_reset_tokens[reset_token] = {
+            "email": email,
+            "expires": datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
+        }
 
-    # Generate a reset token
-    reset_token = str(uuid.uuid4())
-    temporary_reset_tokens[reset_token] = {
-        "email": email,
-        "expires": datetime.utcnow() + timedelta(hours=1)  # Token valid for 1 hour
-    }
+        # Send email with the reset link
+        reset_link = f"http://localhost:8000/reset-password?token={reset_token}"
+        subject = "Forgot Password"
+        body = f"Password reset Request, Click here to reset your password: {reset_link}"
+        try:
+            await send_email(user.email, subject, body) 
+        except Exception as e: 
+            return templates.TemplateResponse("forgot_password.html", {"request": request, "error": f"Failed to send email: {str(e)}"})
 
-    # Send email with the reset link
-    reset_link = f"http://localhost:8000/reset-password?token={reset_token}"
-    await send_email(user.email, "Password Reset Request", f"Click here to reset your password: {reset_link}")
-
-    return templates.TemplateResponse("forgot_password.html", {"request": request, "message": "Reset link sent!"})
+        return templates.TemplateResponse("forgot_password.html", {"request": request, "message": "Reset link sent!"})
+    
+    except Exception as e:
+        return templates.TemplateResponse("forgot_password.html", {"request": request, "error": "An unexpected error occurred."})
 ## resetting password logic
 @router.get("/reset-password", response_class=HTMLResponse)
 async def reset_password_form(request: Request, token: str):
