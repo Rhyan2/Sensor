@@ -1,52 +1,128 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Doctor Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Pulseflowbridge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        rel="stylesheet"
+    />
 </head>
-<body>
+<body class="font-roboto bg-gray-100">
+    <!-- Header Section -->
+    <header class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Pulseflowbridge</h1>
+        </div>
+    </header>
 
-    {% if request.query_params.get('error') %}
-  <div class="error">{{ request.query_params.get('error') }}</div>
-{% elif request.query_params.get('message') %}
-  <div class="success">{{ request.query_params.get('message') }}</div>
-{% endif %}
-    <h1>Welcome to the Doctor Dashboard</h1>
-
-    <!-- Search Form at the top -->
-    <form action="/dashboard" method="get">
-        <input type="text" name="query" placeholder="Search by patient ID or name" value="{{ query if query else '' }}">
-        <button type="submit">Search</button>
-        {% if query %}
-            <a href="/dashboard"><button type="button">Clear Search</button></a>
+    <!-- Main Content -->
+    <main class="container mx-auto mt-10 p-4">
+        <!-- Flash Messages -->
+        {% if request.query_params.get('error') %}
+        <div class="bg-red-500 text-white p-4 rounded-lg mb-6">
+            {{ request.query_params.get('error') }}
+        </div>
+        {% elif request.query_params.get('message') %}
+        <div class="bg-green-500 text-white p-4 rounded-lg mb-6">
+            {{ request.query_params.get('message') }}
+        </div>
         {% endif %}
-    </form>
 
-    <h2>Patients List</h2>
-    <table border="1">
-        <tr>
-            <th>Patient ID</th>
-            <th>Name</th>
-            <th>Age</th>
-            <th>Weight</th>
-            <th>Height</th>
-            <th>Actions</th>
-        </tr>
-        {% for patient in patients %}
-        <tr>
-            <td>{{ patient.id }}</td>
-            <td>{{ patient.name }}</td>
-            <td>{{ patient.age }}</td>
-            <td>{{ patient.weight }}</td>
-            <td>{{ patient.height }}</td>
-            <td><a href="/patient/{{ patient.id }}">View</a></td>
-            <td><a href="/edit_patient/{{ patient.id }}">Edit</a></td>
-            <td><a href="/delete_patient/{{ patient.id }}">Delete</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+        <!-- Dashboard Title -->
+        <h2 class="text-3xl font-bold text-center mb-6">Doctor Dashboard</h2>
 
-    <a href="/add-patient">Add New Patient</a>
-    <br>
-    <a href="/logout">Logout</a>
+        <!-- Search Form -->
+        <form action="/dashboard" method="get" class="mb-8 flex justify-center">
+            <input
+                type="text"
+                name="query"
+                placeholder="Search by patient ID or name"
+                value="{{ query if query else '' }}"
+                class="border border-gray-300 p-2 rounded-l-lg w-full md:w-1/2"
+            />
+            <button
+                type="submit"
+                class="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700"
+            >
+                Search
+            </button>
+            {% if query %}
+            <a
+                href="/dashboard"
+                class="ml-4 bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300"
+            >
+                Clear Search
+            </a>
+            {% endif %}
+        </form>
+
+        <!-- Patients List -->
+        <h3 class="text-2xl font-bold mb-4">Patients List</h3>
+        <div class="overflow-x-auto">
+            <table class="table-auto w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="bg-blue-100">
+                        <th class="border border-gray-300 px-4 py-2">Patient ID</th>
+                        <th class="border border-gray-300 px-4 py-2">Name</th>
+                        <th class="border border-gray-300 px-4 py-2">Age</th>
+                        <th class="border border-gray-300 px-4 py-2">Weight</th>
+                        <th class="border border-gray-300 px-4 py-2">Height</th>
+                        <th class="border border-gray-300 px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr class="hover:bg-gray-100">
+                        <td class="border border-gray-300 px-4 py-2">{{ patient.id }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ patient.name }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ patient.age }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ patient.weight }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ patient.height }}</td>
+                        <td class="border border-gray-300 px-4 py-2 space-x-2">
+                            <a
+                                href="/patient/{{ patient.id }}"
+                                class="text-blue-600 hover:underline"
+                            >
+                                View
+                            </a>
+                            <a
+                                href="/edit_patient/{{ patient.id }}"
+                                class="text-yellow-600 hover:underline"
+                            >
+                                Edit
+                            </a>
+                            <a
+                                href="/delete_patient/{{ patient.id }}"
+                                class="text-red-600 hover:underline"
+                            >
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Actions Section -->
+        <div class="mt-10 flex space-x-4 justify-center">
+            <a
+                href="/add-patient"
+                class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700"
+            >
+                Add New Patient
+            </a>
+            <a
+                href="/logout"
+                class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700"
+            >
+                Logout
+            </a>
+        </div>
+    </main>
 </body>
 </html>
+

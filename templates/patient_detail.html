@@ -83,7 +83,7 @@
         const width = 800 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
-        const yScale = d3.scaleLinear().domain([0, 3.3]).range([height, 0]);
+        const yScale = d3.scaleLinear().domain([1.60, 1.65]).range([height, 0]);
         const xScale = d3.scaleLinear().range([0, width]);
 
         const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d => `${d.toFixed(1)}s`);
@@ -131,7 +131,7 @@
             .attr("stroke-width", 2);
 
         let ecgData = [];
-        const visibleTimeRange = 20; // Display 20 seconds of data at a time
+        const visibleTimeRange = 2; // Display 20 seconds of data at a time
         let startTime = null;
 
         const ws = new WebSocket(`ws://${window.location.host}/ws/${patientId}`);

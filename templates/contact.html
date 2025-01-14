@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pulseflowbridge - Contact</title>
+  <!-- Link to the CSS file in the static folder -->
+  <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
+  <!-- Favicon -->
+  <link rel="icon" href="{{ url_for('static', path='logo/favicon.png') }}" type="image/png">
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Ensure footer stays at the bottom */
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    main {
+      flex: 1;
+    }
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%; /* Ensure full height of the card for centering */
+      text-align: center;
+    }
+  </style>
+</head>
+<body class="font-roboto bg-gray-100">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4 sticky top-0 z-50">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Pulseflowbridge</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a class="hover:underline" href="{{ url_for('home') }}">Home</a></li>
+          <li><a class="hover:underline" href="{{ url_for('features_page') }}">Features</a></li>
+          <li><a class="hover:underline" href="{{ url_for('about_page') }}">About</a></li>
+          <li><a class="hover:underline active-link" href="{{ url_for('contact_page') }}">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <!-- Logo Box -->
+    <div class="absolute top-4 left-4 w-16 h-10">
+      <img src="{{ url_for('static', path='logo/logo.png') }}" alt="Logo" class="w-full h-full object-contain">
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="container mx-auto mt-10 p-4">
+    <!-- Contact Section -->
+    <section class="text-center">
+      <h1 class="text-4xl font-bold mb-6">Contact Us</h1>
+      <p class="text-lg mb-8">We’d love to hear from you! Get in touch with us for any questions, feedback, or support.</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Contact Form -->
+        <form action="{{ url_for('submit_contact') }}" method="POST" class="bg-white p-6 rounded-lg shadow-lg">
+          <div class="mb-4">
+            <label for="name" class="block text-lg font-bold text-gray-700 mb-2">Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Your Full Name"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-600"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="email" class="block text-lg font-bold text-gray-700 mb-2">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Your Email Address"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-600"
+              required
+            />
+          </div>
+          <div class="mb-6">
+            <label for="message" class="block text-lg font-bold text-gray-700 mb-2">Message</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="5"
+              placeholder="Your Message"
+              class="w-full p-3 border rounded-lg focus:outline-none focus:border-blue-600"
+              required
+            ></textarea>
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+          >
+            Send Message
+          </button>
+        </form>
+
+        <!-- Contact Information -->
+        <div class="bg-white p-6 rounded-lg shadow-lg contact-info">
+          <h2 class="text-2xl font-bold mb-4">Get in Touch</h2>
+          <p class="mb-4">Feel free to reach out to us through any of the following:</p>
+          <p class="mb-4"><i class="fas fa-envelope text-blue-600 mr-2"></i> support@pulseflowbridge.com</p>
+          <p class="mb-4"><i class="fas fa-phone-alt text-blue-600 mr-2"></i> 015754750269</p>
+          <p class="mb-4"><i class="fas fa-map-marker-alt text-blue-600 mr-2"></i> Eichendorferstraße 6</p>
+          <div class="social-links mt-4">
+            <a href="#" class="mr-4"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="mr-4"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-4">
+    <div class="container mx-auto text-center">
+      <p>© 2025 Pulseflowbridge. All rights reserved.</p>
+      <div class="social-links mt-2">
+        <a href="#" class="mr-4"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="mr-4"><i class="fab fa-twitter"></i></a>
+        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

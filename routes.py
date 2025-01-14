@@ -215,8 +215,10 @@ async def websocket_endpoint(websocket: WebSocket, patient_id: int, db: Session 
     try:
         while True:
             try:
-                data = await asyncio.wait_for(websocket.receive_json(), timeout=60)
+                data = await asyncio.wait_for(websocket.receive_json(), timeout=420)
+                # for milliseconds to isoformart string
                 data['timestamp'] = datetime.fromtimestamp(data['timestamp'] / 1000).isoformat()
+                # for seconds to isoformart string
                 #data['timestamp'] = datetime.fromisoformat(data['timestamp']).isoformat()
                  # Process ECG data
                 
@@ -457,3 +459,30 @@ async def reset_password(request: Request, token: str = Form(...), new_password:
 
 logger = logging.getLogger(__name__)
 
+@router.get("/features", response_class=HTMLResponse)
+async def features_page(request: Request):
+    return templates.TemplateResponse("features.html", {"request": request})
+
+@router.get("/contact", response_class=HTMLResponse)
+async def contact_page(request: Request):
+    return templates.TemplateResponse("contact.html", {"request": request})
+
+@router.post("/submit-contact", response_class=HTMLResponse)
+async def submit_contact(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    message: str = Form(...),
+):
+    # You can handle the contact form submission logic here, such as saving to the database
+    # or sending an email.
+    return templates.TemplateResponse(
+        "contact.html",
+        {
+            "request": request,
+            "message": "Thank you for reaching out! We'll get back to you shortly.",
+        },
+    )
+@router.get("/about", response_class=HTMLResponse)
+async def about_page(request: Request):
+    return templates.TemplateResponse("about.html", {"request": request})

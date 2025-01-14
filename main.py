@@ -4,6 +4,7 @@ from starlette.middleware.sessions import SessionMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from fastapi.staticfiles import StaticFiles
 from database import engine, Base
 from utils import custom_rate_limit_handler
 from routes import router
@@ -20,9 +21,12 @@ limiter = Limiter(key_func=get_remote_address, default_limits=["100/minute"])
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, custom_rate_limit_handler)
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
 app.include_router(router)
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 if __name__ == "__main__":
     import uvicorn

@@ -1,36 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Add Patient</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Patient - Pulseflowbridge</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Add New Patient</h1>
+<body class="font-roboto bg-gray-100">
+    <header class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">Pulseflowbridge</h1>
+        </div>
+    </header>
+    <main class="container mx-auto mt-10 p-4">
+        <h2 class="text-3xl font-bold text-center mb-6">Add Patient</h2>
+        <form 
+            class="max-w-lg mx-auto bg-white p-6 rounded-lg shadow-lg space-y-4" 
+            action="/add-patient" 
+            method="POST"
+        >
+            <!-- Patient ID -->
+            <div>
+                <label for="id" class="block text-gray-700 font-bold mb-2">Patient ID</label>
+                <input 
+                    type="number" 
+                    id="id" 
+                    name="id" 
+                    placeholder="Enter patient ID" 
+                    class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+                    min="1"
+                    required
+                />
+            </div>
 
-    <form action="/add-patient" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
+            <!-- Patient Name -->
+            <div>
+                <label for="name" class="block text-gray-700 font-bold mb-2">Patient Name</label>
+                <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    placeholder="Enter patient name" 
+                    class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+                    required
+                />
+            </div>
 
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age" min="1" required>
-        <br>
+            <!-- Age -->
+            <div>
+                <label for="age" class="block text-gray-700 font-bold mb-2">Age</label>
+                <input 
+                    type="number" 
+                    id="age" 
+                    name="age" 
+                    placeholder="Enter patient age" 
+                    class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+                    min="1"
+                    required
+                />
+            </div>
 
-        <label for="id">Patient ID:</label>
-        <input type="number" id="id" name="id"min="1"  required>
-        <br>
+            <!-- Height -->
+            <div>
+                <label for="height" class="block text-gray-700 font-bold mb-2">Height (cm)</label>
+                <input 
+                    type="number" 
+                    id="height" 
+                    name="height" 
+                    placeholder="Enter patient height" 
+                    class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+                    min="1"
+                    required
+                />
+            </div>
 
-        <label for="height">Height (cm):</label>
-        <input type="number" id="height" name="height" min="1"  required>
-        <br>
+            <!-- Weight -->
+            <div>
+                <label for="weight" class="block text-gray-700 font-bold mb-2">Weight (kg)</label>
+                <input 
+                    type="number" 
+                    id="weight" 
+                    name="weight" 
+                    placeholder="Enter patient weight" 
+                    class="w-full p-3 border rounded-lg focus:ring focus:ring-blue-300"
+                    min="1"
+                    required
+                />
+            </div>
 
-        <label for="weight">Weight (kg):</label>
-        <input type="number" id="weight" name="weight" min="1"  required>
-        <br>
-       
-        <button type="submit">Add Patient</button>
-    </form>
-
-    <br>
-    <a href="/dashboard">Back to Dashboard</a>
+            <!-- Submit Button -->
+            <button 
+                type="submit" 
+                class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition-colors"
+            >
+                Add Patient
+            </button>
+        </form>
+        <div class="mt-6 text-center">
+            <a href="/dashboard" class="text-blue-600 hover:underline">Back to Dashboard</a>
+        </div>
+    </main>
 </body>
 </html>
+
+
+
