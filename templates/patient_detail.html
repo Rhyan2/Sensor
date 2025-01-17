@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient ECG Monitor</title>
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
@@ -36,6 +37,10 @@
             fill: none;
             stroke: steelblue;
             stroke-width: 2px;
+        }
+        .peak {
+            fill: red;
+            stroke: none;
         }
         #bpm {
             text-align: center;
@@ -83,7 +88,7 @@
         const width = 800 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
-        const yScale = d3.scaleLinear().domain([1.60, 1.65]).range([height, 0]);
+        const yScale = d3.scaleLinear().domain([1, 2.5]).range([height, 0]);
         const xScale = d3.scaleLinear().range([0, width]);
 
         const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d => `${d.toFixed(1)}s`);
@@ -91,6 +96,7 @@
 
         const line = d3
             .line()
+            .curve(d3.curveBasis) // Use curveBasis for smoothing
             .x(d => xScale(d.timestamp))
             .y(d => yScale(d.ecg));
 
@@ -131,8 +137,10 @@
             .attr("stroke-width", 2);
 
         let ecgData = [];
-        const visibleTimeRange = 2; // Display 20 seconds of data at a time
+        const visibleTimeRange = 3; // Display 2 seconds of data at a time
         let startTime = null;
+
+        const peakThreshold = 1.67; // Peak threshold in volts
 
         const ws = new WebSocket(`ws://${window.location.host}/ws/${patientId}`);
 
@@ -163,6 +171,17 @@
 
             // Update graph with new data
             path.datum(ecgData).attr("d", line);
+
+            // Detect and draw peaks
+            graph.selectAll("circle.peak").remove();
+            graph.selectAll("circle.peak")
+                .data(ecgData.filter(d => d.ecg > peakThreshold))
+                .enter()
+                .append("circle")
+                .attr("class", "peak")
+                .attr("cx", d => xScale(d.timestamp))
+                .attr("cy", d => yScale(d.ecg))
+                .attr("r", 5);
 
             // Update BPM display
             document.getElementById("bpmValue").innerText = data.bpm.toFixed(1);

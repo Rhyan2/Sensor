@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - SQLALCHEMY_DATABASE_URL=mysql://user:12yt343u@db:3306/Pulseflowbridge
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: Pulseflowbridge
+      MYSQL_USER: user
+      MYSQL_PASSWORD: 12yt343u
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

@@ -70,7 +70,7 @@ async def process_and_send_data_one_by_one(csv_file_path, uri):
     # Loop to handle WebSocket reconnections
     while True:
         try:
-            async with websockets.connect(uri, ping_interval=20, ping_timeout=420) as websocket:
+            async with websockets.connect(uri, ping_interval=None, ping_timeout=None) as websocket:
                 print("Connected to WebSocket server.")
                 last_sent_time = time.time()
 

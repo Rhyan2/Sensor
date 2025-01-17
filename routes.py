@@ -224,7 +224,7 @@ async def websocket_endpoint(websocket: WebSocket, patient_id: int, db: Session 
                 
                 ecg_data = ECGData(patient_id=patient_id, **data)
                 heart_rate = ecg_data.bpm
-                alarm = heart_rate < 60 or heart_rate > 100
+                alarm = heart_rate < 50 or heart_rate > 100
                 
                 
 
