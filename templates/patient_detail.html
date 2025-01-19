@@ -88,7 +88,7 @@
         const width = 800 - margin.left - margin.right;
         const height = 400 - margin.top - margin.bottom;
 
-        const yScale = d3.scaleLinear().domain([1, 2.5]).range([height, 0]);
+        const yScale = d3.scaleLinear().domain([1.6, 1.8]).range([height, 0]);
         const xScale = d3.scaleLinear().range([0, width]);
 
         const xAxis = d3.axisBottom(xScale).ticks(10).tickFormat(d => `${d.toFixed(1)}s`);
@@ -140,7 +140,7 @@
         const visibleTimeRange = 3; // Display 2 seconds of data at a time
         let startTime = null;
 
-        const peakThreshold = 1.67; // Peak threshold in volts
+        const peakThreshold = 1.66; // Peak threshold in volts
 
         const ws = new WebSocket(`ws://${window.location.host}/ws/${patientId}`);
 
