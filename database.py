@@ -6,8 +6,8 @@ import os
 load_dotenv()
 
 
+#SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL")
 SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL")
-#SQLALCHEMY_DATABASE_URL = os.getenv("SQLALCHEMY_DATABASE_URL", "mysql://user:12yt343u@db:3306/Pulseflowbridge")
 
 
 

@@ -67,7 +67,10 @@ async def signup(request: Request, user: UserCreate = Depends(UserCreate.as_form
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return RedirectResponse("/", status_code=302)
+    return templates.TemplateResponse("home.html", {
+        "request": request, 
+        "message": "Successfully signed up" })
+     
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_form(request: Request):
@@ -94,13 +97,7 @@ async def login(
     request.session["user"] = email
     return RedirectResponse("/dashboard", status_code=302)
 
-@router.get("/welcome", response_class=HTMLResponse)
-async def welcome(request: Request):
-    username = request.session.get("user")
-    if not username:
-        return RedirectResponse("/?error=Please%20Login%20or%20Register", status_code=302)
 
-    return templates.TemplateResponse("welcome.html", {"request": request, "user": username})
 
 @router.get("/logout")
 async def logout(request: Request):
