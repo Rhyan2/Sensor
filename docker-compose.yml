@@ -3,7 +3,7 @@ services:
     build: .
     environment:
       - FORWARDED_ALLOW_IPS=*
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-header
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers
       - SQLALCHEMY_DATABASE_URL=mysql+pymysql://user:12yt343u@db:3306/Pulseflowbridge
       # put your batabase url here
     depends_on:
