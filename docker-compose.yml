@@ -24,7 +24,11 @@ services:
       MYSQL_PASSWORD: 12yt343u
     volumes:
       - mysql_data:/var/lib/mysql
-    
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    networks:
       - pulse-network
 
 volumes:
@@ -33,3 +37,6 @@ volumes:
 networks:
   pulse-network:
     driver: bridge
+
+
+
