@@ -3,9 +3,8 @@ services:
     build: .
     environment:
       - FORWARDED_ALLOW_IPS=*
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers
       - SQLALCHEMY_DATABASE_URL=mysql+pymysql://user:12yt343u@db:3306/Pulseflowbridge
-      # put your batabase url here
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers
     depends_on:
       db:
         condition: service_healthy
@@ -16,7 +15,6 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      # set your database password and name
       MYSQL_DATABASE: Pulseflowbridge
       MYSQL_USER: user
       MYSQL_PASSWORD: 12yt343u
