@@ -35,7 +35,7 @@ temporary_reset_tokens = {}
 @router.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     error = request.query_params.get("error")
-    return templates.TemplateResponse("home.html", {"request": request, "error": error})
+    return templates.TemplateResponse(base_url + "home.html", {"request": request, "error": error})
 
 @router.get("/signup", response_class=HTMLResponse)
 @limiter.limit("10/minute")
