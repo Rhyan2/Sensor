@@ -1,4 +1,4 @@
-
+import os
 from datetime import datetime, timedelta
 from datetime import datetime
 from fastapi.encoders import jsonable_encoder
@@ -23,7 +23,7 @@ from starlette.websockets import WebSocketState
 from fastapi.encoders import jsonable_encoder
 import logging
 
-
+base_url = os.getenv('base_url')
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")# template setup
 logger = logging.getLogger(__name__)
@@ -40,7 +40,7 @@ async def home(request: Request):
 @router.get("/signup", response_class=HTMLResponse)
 @limiter.limit("10/minute")
 async def signup_form(request: Request):
-    return templates.TemplateResponse("signup.html", {"request": request})
+    return templates.TemplateResponse(base_url + "signup.html", {"request": request})
 
 @router.post("/signup", response_class=HTMLResponse)
 @limiter.limit("5/minute")
@@ -48,7 +48,7 @@ async def signup(request: Request, user: UserCreate = Depends(UserCreate.as_form
     db_user=db.query(User).filter(User.id==user.email).first()
     if db_user:
         return templates.TemplateResponse(
-            "signup.html", {"request": request, "error": "Email already registered"}
+            base_url + "signup.html", {"request": request, "error": "Email already registered"}
         )
 
     # Validate password explicitly
@@ -67,14 +67,14 @@ async def signup(request: Request, user: UserCreate = Depends(UserCreate.as_form
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    return templates.TemplateResponse("home.html", {
+    return templates.TemplateResponse(base_url + "home.html", {
         "request": request, 
         "message": "Successfully signed up" })
      
 
 @router.get("/login", response_class=HTMLResponse)
 async def login_form(request: Request):
-    return templates.TemplateResponse("login.html", {"request": request})
+    return templates.TemplateResponse(base_url + "login.html", {"request": request})
 
 @router.post("/login", response_class=HTMLResponse)
 @limiter.limit("5/minute")
@@ -156,7 +156,7 @@ async def patient_detail(request: Request, patient_id: int, current_user: dict =
 async def show_add_patient_form(request: Request, current_user: dict = Depends(get_current_user)):
     if not current_user:
         return RedirectResponse("/?error=Please%20Login%20or%20Register", status_code=302)
-    return templates.TemplateResponse("add_patient.html", {"request": request})
+    return templates.TemplateResponse(base_url + "add_patient.html", {"request": request})
 
 @router.post("/add-patient", response_class=HTMLResponse)
 @limiter.limit("10/minute")
@@ -201,7 +201,7 @@ async def patient_detail(request: Request, patient_id: int, current_user: dict =
     patient = db.query(Patient).filter(Patient.id == patient_id).first()
     if not patient:
         raise HTTPException(status_code=404, detail="Patient not found")
-    return templates.TemplateResponse("patient_detail.html", {"request": request, "patient": patient})
+    return templates.TemplateResponse(base_url + "patient_detail.html", {"request": request, "patient": patient})
 
 # WEB SOCKECKT FOR ecg dta
 
@@ -359,7 +359,7 @@ async def delete_patient_confirm(request: Request, patient_id: int, current_user
         
 
     # Render confirmation page
-    return templates.TemplateResponse("delete_patient.html", {"request": request, "patient": jsonable_encoder(patient)})
+    return templates.TemplateResponse(base_url + "delete_patient.html", {"request": request, "patient": jsonable_encoder(patient)})
 
 
 @router.post("/delete_patient/{patient_id}", response_class=HTMLResponse)
@@ -393,13 +393,13 @@ async def delete_patient(
     db.commit()
 
     # Redirect back to the dashboard
-    return RedirectResponse("/dashboard", status_code=302)
+    return RedirectResponse(base_url + "/dashboard", status_code=302)
 
 ## Adding a forgot password link
 @router.get("/forgot-password", response_class=HTMLResponse)
 async def forgot_password_form(request: Request):
     logger.debug("GET /forgot-password route accessed")
-    return templates.TemplateResponse("forgot_password.html", {"request": request})
+    return templates.TemplateResponse(base_url + "forgot_password.html", {"request": request})
 
 @router.post("/forgot-password", response_class=HTMLResponse)
 async def forgot_password(request: Request, email: str = Form(...), db: Session = Depends(get_db)):
@@ -409,7 +409,7 @@ async def forgot_password(request: Request, email: str = Form(...), db: Session 
         user = db.query(User).filter(User.email == email).first()
         if not user:
             
-            return templates.TemplateResponse("forgot_password.html", {"request": request, "error": "Email not found."})
+            return templates.TemplateResponse(base_url + "forgot_password.html", {"request": request, "error": "Email not found."})
         # Generate a reset token
         reset_token = str(uuid.uuid4())
         temporary_reset_tokens[reset_token] = {
@@ -424,12 +424,12 @@ async def forgot_password(request: Request, email: str = Form(...), db: Session 
         try:
             await send_email(user.email, subject, body) 
         except Exception as e: 
-            return templates.TemplateResponse("forgot_password.html", {"request": request, "error": f"Failed to send email: {str(e)}"})
+            return templates.TemplateResponse(base_url + "forgot_password.html", {"request": request, "error": f"Failed to send email: {str(e)}"})
 
-        return templates.TemplateResponse("forgot_password.html", {"request": request, "message": "Reset link sent!"})
+        return templates.TemplateResponse(base_url + "forgot_password.html", {"request": request, "message": "Reset link sent!"})
     
     except Exception as e:
-        return templates.TemplateResponse("forgot_password.html", {"request": request, "error": "An unexpected error occurred."})
+        return templates.TemplateResponse(base_url + "forgot_password.html", {"request": request, "error": "An unexpected error occurred."})
 ## resetting password logic
 @router.get("/reset-password", response_class=HTMLResponse)
 async def reset_password_form(request: Request, token: str):
@@ -470,11 +470,11 @@ logger = logging.getLogger(__name__)
 
 @router.get("/features", response_class=HTMLResponse)
 async def features_page(request: Request):
-    return templates.TemplateResponse("features.html", {"request": request})
+    return templates.TemplateResponse(base_url + "features.html", {"request": request})
 
 @router.get("/contact", response_class=HTMLResponse)
 async def contact_page(request: Request):
-    return templates.TemplateResponse("contact.html", {"request": request})
+    return templates.TemplateResponse(base_url + "contact.html", {"request": request})
 
 @router.post("/submit-contact", response_class=HTMLResponse)
 async def submit_contact(
@@ -494,4 +494,4 @@ async def submit_contact(
     )
 @router.get("/about", response_class=HTMLResponse)
 async def about_page(request: Request):
-    return templates.TemplateResponse("about.html", {"request": request})
+    return templates.TemplateResponse(base_url + "about.html", {"request": request})
