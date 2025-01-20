@@ -1,10 +1,13 @@
+version: '3.8'
+
 services:
-  your-app:
+  web:
     build: .
+    ports:
+      - "8000:8000"
     environment:
-      - FORWARDED_ALLOW_IPS=*
       - SQLALCHEMY_DATABASE_URL=mysql+pymysql://user:12yt343u@db:3306/Pulseflowbridge
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --proxy-headers
+      # put your batabase url here
     depends_on:
       db:
         condition: service_healthy
@@ -15,13 +18,14 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
+      # set your database password and name
       MYSQL_DATABASE: Pulseflowbridge
       MYSQL_USER: user
       MYSQL_PASSWORD: 12yt343u
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "db"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
     networks:
