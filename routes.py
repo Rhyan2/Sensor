@@ -40,7 +40,7 @@ async def home(request: Request):
 @router.get("/signup", response_class=HTMLResponse)
 @limiter.limit("10/minute")
 async def signup_form(request: Request):
-    return templates.TemplateResponse( "signup.html", {"request": request})
+    return templates.TemplateResponse( "/signup", {"request": request})
 
 @router.post("/signup", response_class=HTMLResponse)
 @limiter.limit("5/minute")
