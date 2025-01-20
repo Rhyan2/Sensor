@@ -109,8 +109,7 @@ async def process_and_send_data_one_by_one(csv_file_path, uri):
 
 if __name__ == "__main__":
     csv_file_path = r"https://raw.githubusercontent.com/Health-signals/Sensor/refs/heads/main/ecg_log5.csv"
-   
- websocket_uri = "ws://redesigned-tribble-q77q6pr9wq4jfx44w-8000.preview.app.github.dev" # Replace with your WebSocket server URI
+    websocket_uri = "ws://redesigned-tribble-q77q6pr9wq4jfx44w-8000.preview.app.github.dev" # Replace with your WebSocket server URI
 
 
     try:
