@@ -23,7 +23,7 @@ from starlette.websockets import WebSocketState
 from fastapi.encoders import jsonable_encoder
 import logging
 
-base_url = os.getenv('base_url')
+base_url = request.host_url
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")# template setup
 logger = logging.getLogger(__name__)
