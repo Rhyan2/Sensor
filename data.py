@@ -108,8 +108,8 @@ async def process_and_send_data_one_by_one(csv_file_path, uri):
             await asyncio.sleep(5)
 
 if __name__ == "__main__":
-    csv_file_path = r"C:\Users\Neu\Desktop\vs\bita\ecg_data\ecg_log.csv"
-    #csv_file_path = r"C:\Users\Neu\Downloads\SampleECG.csv"  # Path to the uploaded CSV file
+    csv_file_path = r"https://github.com/Health-signals/Sensor/blob/main/ecg_log5.csv"
+   
     websocket_uri = "ws://localhost:8000/ws/3"  # Replace with your WebSocket server URI
 
     try:
