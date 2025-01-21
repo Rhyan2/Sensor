@@ -69,7 +69,7 @@ This system reduces the need for constant manual monitoring by nurses, making it
 
 **PulseFlowBridge** offers a smart and efficient way to monitor the heart health of elderly patients. By leveraging advanced sensors and real-time data processing, this system ensures timely interventions during emergencies while reducing the workload for healthcare providers. As we continue to refine and improve our solution, we aim to make healthcare more accessible and reliable for elderly populations.
 
-##Development environment setup
+## Development environment setup
 Codespaces setup
 Open codespaces and use docker-compose up
 
