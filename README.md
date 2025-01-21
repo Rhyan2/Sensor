@@ -65,4 +65,8 @@ This system reduces the need for constant manual monitoring by nurses, making it
 - Adding functionalities that can support to view live data of morethan 3 patients
 
 ---
+## Conclusion
+
+**PulseFlowBridge** offers a smart and efficient way to monitor the heart health of elderly patients. By leveraging advanced sensors and real-time data processing, this system ensures timely interventions during emergencies while reducing the workload for healthcare providers. As we continue to refine and improve our solution, we aim to make healthcare more accessible and reliable for elderly populations.
+
 
