@@ -6,8 +6,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://user:12yt343u@db:3306/Pulseflowbridge
-      # put your batabase url here
+      - SQLALCHEMY_DATABASE_URL=${SQLALCHEMY_DATABASE_URL}
     depends_on:
       db:
         condition: service_healthy
@@ -17,11 +16,10 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      # set your database password and name
-      MYSQL_DATABASE: Pulseflowbridge
-      MYSQL_USER: user
-      MYSQL_PASSWORD: 12yt343u
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
@@ -37,3 +35,4 @@ volumes:
 networks:
   pulse-network:
     driver: bridge
+
