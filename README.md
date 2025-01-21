@@ -22,7 +22,17 @@ This system reduces the need for constant manual monitoring by nurses, making it
 ---
 
 ## Evolution of our graph using images
+![Image1](https://github.com/Health-signals/Sensor/blob/main/photo_2025-01-17_14-46-44.jpg)
 
+*Figure 1: Graph with noise or unfiltered signal*
+
+![Image1](https://github.com/Health-signals/Sensor/blob/main/photo_2025-01-17_14-48-08.jpg)
+
+*Figure 2: Before defining the perfect peak detect*
+
+![Image1](https://github.com/Health-signals/Sensor/blob/main/photo_2025-01-20_08-47-32.jpg)
+
+*Figure 3: After getting the perfect threshold for peak detection.*
 ## Challenges Faced
 
 1. **Sensor Selection:**
