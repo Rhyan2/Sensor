@@ -51,6 +51,8 @@ This system reduces the need for constant manual monitoring by nurses, making it
 4. **Use of websocket:**
     - We are still debating whether the websocket is the perfect method to send real time data because we could get lags as we are visualising the graph
 
+5. **Making our project work on codespace:**
+   - Since our project was fully developed locally feom the start, we had to change many things to see that it works well on codespaces and we had just one day for still .We make to do a docker that can setup a demo for the doctor sign in but since we are out of time we did not manage to get over the issue of serving data to an online websocket so that the graph can be visualise as real time but we have provide images of a well working graph on our local machine.
 ---
 
 ## Future Goals
