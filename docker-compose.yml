@@ -6,7 +6,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - SQLALCHEMY_DATABASE_URL=${SQLALCHEMY_DATABASE_URL}
+      - SQLALCHEMY_DATABASE_URL=mysql+pymysql://user:12yt343u@db:3306/Pulseflowbridge
     depends_on:
       db:
         condition: service_healthy
@@ -16,10 +16,10 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: Pulseflowbridge
       MYSQL_USER: user
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_PASSWORD: 12yt343u
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
