@@ -73,5 +73,5 @@ This system reduces the need for constant manual monitoring by nurses, making it
 Codespaces setup
 Open codespaces and use docker-compose up
 
-When register you can use an email and password of your own and any fake data for input. You can just imagine of any data
+When register you can use an email and password of your own and any fake data for input. You can just imagine of any data for you the doctor and the one of the patient
 
